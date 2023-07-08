@@ -1,0 +1,10 @@
+[package]
+name = "tg-send"
+version = "0.0.1"
+authors = ["luxagen <rotkraken@luxagen.com>"]
+edition = "2023"
+
+[dependencies]
+telegram-bot = "0.7"
+tokio = { version = "0.2.25", features = ["full"] }
+futures = "0.3.28"
