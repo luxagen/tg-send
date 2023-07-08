@@ -7,6 +7,41 @@ use futures::StreamExt;
 use telegram_bot::*;
 use std::io::Read;
 
+lazy_static::lazy_static!
+{
+	static ref args: Args = Args::parse();
+}
+
+#[derive(clap::Parser,Default,Debug)]
+#[clap(author,about,long_about=None)]
+#[command(arg_required_else_help = true)]
+struct Args
+{
+	#[arg(long,short='x',help="Clear metadata from extended attributes")]
+	clear: bool,
+	#[arg(long,short,help="Suppress stdout logging")]
+	quiet: bool,
+	#[arg(long,short='Q',help="Force stdout logging (ignore .rk.quiet files)")]
+	unquiet: bool,
+	#[arg(long,short,help="Log files to stdout in `md5deep -zl` format")]
+	export: bool,
+	#[arg(long,short,help="Print status statistics to stderr")]
+	count: bool,
+	#[arg(long,short,help="Print paths relative to each argument")]
+	relative: bool,
+	#[arg(long,short,help="Initialise files that are missing metadata")]
+	init: bool,
+	#[arg(long,short,help="Update metadata for changed files")]
+	update: bool,
+	#[arg(long,short,help="Verify initialised files against metadata")]
+	verify: bool,
+	#[arg(long="verify-ro",short='V',help="As --verify, but don\'t update metadata")]
+	readonly: bool,
+
+	#[arg(required=false,help="Filesystem trees on which to operate")]
+	tree: Vec<String>,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
 	let token = env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN not set");
