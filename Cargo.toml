@@ -1,0 +1,19 @@
+[package]
+name = "telegram-send"
+version = "0.0.1"
+authors = ["luxagen <hello@luxagen.com>"]
+homepage = "http://www.luxagen.com/product/telegram-send"
+license = "AGPL-3.0-only"
+edition = "2021"
+
+[[bin]]
+name = "tg-send"
+path = "src/main.rs"
+
+[profile.release]
+lto = true
+
+[dependencies]
+telegram-bot = "0.7"
+tokio = { version = "0.2.25", features = ["full"] }
+futures = "0.3.28"
