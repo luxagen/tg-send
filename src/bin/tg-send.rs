@@ -19,9 +19,9 @@ async fn main() -> Result<(), Error> {
 	let mut buf = String::new();
 	let s = std::io::BufReader::new(std::io::stdin()).read_to_string(&mut buf);
 	let text = std::borrow::Cow::Owned(buf);
-	api.spawn(chat.text(text));
+	let t = api.send(chat.text(text));
 
-	std::thread::sleep(std::time::Duration::from_millis(2000));
+	t.await.unwrap();
 
 	Ok(())
 }
