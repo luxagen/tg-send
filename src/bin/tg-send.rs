@@ -9,11 +9,7 @@ use std::io::Read;
 #[derive(clap::Subcommand)]
 enum Commands
 {
-	Send
-	{
-		chatid: i64,
-//		msg: String,
-	},
+	SendText { chatid: i64 },
 }
 
 #[derive(clap::Parser)]
@@ -29,30 +25,6 @@ struct Args
 
 	#[command(subcommand,help="Send a text message via stdin")]
 	command: Commands,
-
-//	#[arg(long,short='x',help="Clear metadata from extended attributes")]
-//	clear: bool,
-//	#[arg(long,short,help="Suppress stdout logging")]
-//	quiet: bool,
-//	#[arg(long,short='Q',help="Force stdout logging (ignore .rk.quiet files)")]
-//	unquiet: bool,
-//	#[arg(long,short,help="Log files to stdout in `md5deep -zl` format")]
-//	export: bool,
-//	#[arg(long,short,help="Print status statistics to stderr")]
-//	count: bool,
-//	#[arg(long,short,help="Print paths relative to each argument")]
-//	relative: bool,
-//	#[arg(long,short,help="Initialise files that are missing metadata")]
-//	init: bool,
-//	#[arg(long,short,help="Update metadata for changed files")]
-//	update: bool,
-//	#[arg(long,short,help="Verify initialised files against metadata")]
-//	verify: bool,
-//	#[arg(long="verify-ro",short='V',help="As --verify, but don\'t update metadata")]
-//	readonly: bool,
-//
-//	#[arg(required=false,help="Filesystem trees on which to operate")]
-//	tree: Vec<String>,
 }
 
 const EVK_TBT: &str = "TELEGRAM_BOT_TOKEN";
@@ -112,7 +84,7 @@ async fn main() -> Result<(), Error> {
 
 	match ARGS.command
 	{
-		Commands::Send { chatid } =>
+		Commands::SendText { chatid } =>
 		{
 			let chat = ChannelId::new(chatid);
 			let text = std::borrow::Cow::Owned(slurp_stdin());
@@ -128,7 +100,7 @@ async fn main() -> Result<(), Error> {
 			match future.await
 			{
 				Err(e) => eprintln!("error: {e}"),
-				_ => std::process::exit(1),
+				_ => std::process::exit(0),
 			}
 		},
 	}
