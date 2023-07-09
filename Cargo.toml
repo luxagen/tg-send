@@ -6,6 +6,8 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.3.11", features = ["cargo", "derive"] }
+colored = "2.0.0"
+lazy_static = "1.4.0"
 telegram-bot = "0.7"
 tokio = { version = "0.2.25", features = ["full"] }
 futures = "0.3.28"
