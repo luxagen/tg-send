@@ -24,6 +24,9 @@ struct Args
 	#[arg(long,short,help="Commands will be performed via this Telegram bot token")]
 	token: Option<String>,
 
+	#[arg(long,short,help="Wait this number of milliseconds for a response from Telegram, otherwise wait indefinitely")]
+	wait: Option<u64>,
+
 	#[command(subcommand,help="Send a text message via stdin")]
 	command: Commands,
 
@@ -105,22 +108,28 @@ fn slurp_stdin() -> String
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-	eprintln!("TOKEN: {}",ARGS.token.as_ref().unwrap());
-
 	let api = Api::new(ARGS.token.as_ref().unwrap());
 
 	match ARGS.command
 	{
 		Commands::Send { chatid } =>
 		{
-			eprintln!("CHATID: {}",chatid);
 			let chat = ChannelId::new(chatid);
-			let x = slurp_stdin();
-			println!("text: {x}");
-//			let text = std::borrow::Cow::Owned(slurp_stdin());
-//			api.spawn(chat.text(text));
-////			api.send(chat.text(text)).await.expect("beans");
-//			std::thread::sleep(std::time::Duration::from_millis(2000));
+			let text = std::borrow::Cow::Owned(slurp_stdin());
+
+			let wait = match ARGS.wait
+			{
+				None => core::time::Duration::from_secs(20),
+				Some(x) => core::time::Duration::from_millis(x),
+			};
+
+			let future = api.send_timeout(chat.text(text),wait);
+
+			match future.await
+			{
+				Err(e) => eprintln!("error: {e}"),
+				_ => std::process::exit(1),
+			}
 		},
 	}
 
