@@ -5,6 +5,7 @@ authors = ["luxagen <rotkraken@luxagen.com>"]
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.3.11", features = ["cargo", "derive"] }
 telegram-bot = "0.7"
 tokio = { version = "0.2.25", features = ["full"] }
 futures = "0.3.28"
