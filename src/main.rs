@@ -77,8 +77,11 @@ fn slurp_stdin() -> String
 	match std::io::BufReader::new(std::io::stdin()).read_to_string(&mut buf)
 	{
 		Err(_) => panic!(),
-		Ok(_) => buf,
+		Ok(_) => (),
 	}
+
+	buf.truncate(4096);
+	buf
 }
 
 #[tokio::main]
